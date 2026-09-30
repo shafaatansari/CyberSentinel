@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CyberSentinel | Security Score</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #050505;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: min(700px, 92%);
+        }
+
+        .card {
+            background: #111113;
+            border: 1px solid #29292d;
+            border-radius: 20px;
+            padding: 35px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #77777f;
+            font-size: 13px;
+            margin-bottom: 30px;
+        }
+
+        .score {
+            font-size: 72px;
+            font-weight: bold;
+            color: #ff3030;
+            margin: 20px 0 5px;
+        }
+
+        .status {
+            color: #42e58b;
+            font-size: 15px;
+            margin-bottom: 35px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .stat {
+            background: #18181b;
+            border: 1px solid #252528;
+            border-radius: 14px;
+            padding: 20px;
+        }
+
+        .stat-number {
+            font-size: 25px;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .stat-label {
+            color: #77777f;
+            font-size: 11px;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 11px 18px;
+            border-radius: 9px;
+            border: 1px solid #29292d;
+            color: #aaa;
+            text-decoration: none;
+            font-size: 12px;
+        }
+
+        .back:hover {
+            color: #fff;
+            border-color: #ff3030;
+        }
+
+        @media (max-width: 600px) {
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="card">
+
+            <h1>🛡️ Security Score</h1>
+
+            <p class="subtitle">
+                Current CyberSentinel security assessment
+            </p>
+
+            <div class="score">
+                {{ score }}
+            </div>
+
+            <div class="status">
+                {{ status }}
+            </div>
+
+            <div class="stats">
+
+                <div class="stat">
+                    <div class="stat-number">
+                        {{ event_count }}
+                    </div>
+
+                    <div class="stat-label">
+                        Security Events
+                    </div>
+                </div>
+
+                <div class="stat">
+                    <div class="stat-number">
+                        {{ alert_count }}
+                    </div>
+
+                    <div class="stat-label">
+                        Security Alerts
+                    </div>
+                </div>
+
+            </div>
+
+            <a
+                href="{{ url_for('main.dashboard') }}"
+                class="back"
+            >
+                ← Back to Dashboard
+            </a>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

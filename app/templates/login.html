@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CyberSentinel | Login</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at 50% 35%, rgba(180, 0, 0, 0.18), transparent 35%),
+                linear-gradient(135deg, #050505, #0b0b0b 55%, #120000);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255, 0, 0, 0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 0, 0, 0.025) 1px, transparent 1px);
+            background-size: 45px 45px;
+            pointer-events: none;
+        }
+
+        .container {
+            width: 430px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .brand {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .brand-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 14px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            background: linear-gradient(145deg, #210000, #090909);
+            border: 1px solid rgba(255, 40, 40, 0.35);
+            box-shadow:
+                0 0 25px rgba(255, 0, 0, 0.18),
+                inset 0 0 20px rgba(255, 0, 0, 0.05);
+        }
+
+        .brand h1 {
+            font-size: 27px;
+            letter-spacing: 1px;
+        }
+
+        .brand h1 span {
+            color: #ff3030;
+        }
+
+        .brand p {
+            margin-top: 7px;
+            color: #777;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+        }
+
+        .card {
+            padding: 38px;
+            border-radius: 22px;
+            background: rgba(12, 12, 12, 0.92);
+            border: 1px solid rgba(255, 45, 45, 0.22);
+            box-shadow:
+                0 25px 70px rgba(0, 0, 0, 0.75),
+                0 0 35px rgba(180, 0, 0, 0.08);
+            backdrop-filter: blur(14px);
+        }
+
+        .card-header {
+            margin-bottom: 28px;
+        }
+
+        .card-header h2 {
+            font-size: 21px;
+            margin-bottom: 7px;
+        }
+
+        .card-header p {
+            color: #777;
+            font-size: 13px;
+        }
+
+        .field {
+            margin-bottom: 19px;
+        }
+
+        .field label {
+            display: block;
+            margin-bottom: 8px;
+            color: #bdbdbd;
+            font-size: 13px;
+        }
+
+        .input-box {
+            position: relative;
+        }
+
+        .input-box span {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #777;
+        }
+
+        input {
+            width: 100%;
+            height: 48px;
+            padding: 0 15px 0 43px;
+            border-radius: 11px;
+            border: 1px solid #292929;
+            background: #080808;
+            color: white;
+            outline: none;
+            transition: 0.25s;
+        }
+
+        input:focus {
+            border-color: #e52b2b;
+            box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.08);
+        }
+
+        input::placeholder {
+            color: #555;
+        }
+
+        .login-btn {
+            width: 100%;
+            height: 49px;
+            margin-top: 5px;
+            border: none;
+            border-radius: 11px;
+            background: linear-gradient(135deg, #ff2424, #a50000);
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(220, 0, 0, 0.2);
+            transition: 0.25s;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(255, 0, 0, 0.3);
+        }
+
+        .security-status {
+            margin-top: 22px;
+            padding: 11px 13px;
+            border-radius: 10px;
+            background: rgba(255, 0, 0, 0.045);
+            border: 1px solid rgba(255, 0, 0, 0.12);
+            color: #888;
+            font-size: 11px;
+            text-align: center;
+        }
+
+        .security-status strong {
+            color: #ff4545;
+        }
+
+        .register {
+            text-align: center;
+            margin-top: 24px;
+            color: #666;
+            font-size: 13px;
+        }
+
+        .register a {
+            color: #ff3b3b;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .register a:hover {
+            color: #ff7070;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #444;
+            font-size: 10px;
+            letter-spacing: 0.7px;
+        }
+
+        @media (max-width: 520px) {
+            .container {
+                width: calc(100% - 30px);
+            }
+
+            .card {
+                padding: 28px 23px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="brand">
+            <div class="brand-icon">🛡️</div>
+
+            <h1>Cyber<span>Sentinel</span></h1>
+
+            <p>PERSONAL SECURITY MONITORING PLATFORM</p>
+        </div>
+
+        <div class="card">
+
+            <div class="card-header">
+                <h2>Welcome back</h2>
+                <p>Authenticate to access your security console.</p>
+            </div>
+
+            <form method="POST">
+
+                <div class="field">
+                    <label>Username</label>
+
+                    <div class="input-box">
+                        <span>◉</span>
+                        <input
+                            type="text"
+                            name="username"
+                            placeholder="Enter username"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>Password</label>
+
+                    <div class="input-box">
+                        <span>◆</span>
+                        <input
+                            type="password"
+                            name="password"
+                            placeholder="Enter password"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <button class="login-btn" type="submit">
+                    ACCESS SECURITY CONSOLE
+                </button>
+
+            </form>
+
+            <div class="security-status">
+                🔒 <strong>SECURE CONNECTION</strong> · Protected authentication
+            </div>
+
+            <div class="register">
+                Don't have an account?
+                <a href="/register">Create Account</a>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            CYBERSENTINEL SECURITY SYSTEM · AUTHORIZED ACCESS ONLY
+        </div>
+
+    </div>
+
+</body>
+</html>

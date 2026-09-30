@@ -1,0 +1,1606 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CyberSentinel | Security Dashboard</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Inter, Arial, sans-serif;
+        }
+
+        :root {
+            --red: #ff3030;
+            --red-bright: #ff4545;
+            --red-dark: #8f0000;
+
+            --bg: #030303;
+            --sidebar: rgba(9, 9, 11, 0.86);
+
+            --card: rgba(16, 16, 19, 0.72);
+
+            --border: rgba(255, 255, 255, 0.075);
+
+            --text: #f4f4f5;
+            --muted: #85858d;
+
+            --green: #42e58b;
+            --yellow: #f0bd55;
+        }
+
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+
+        body {
+            min-height: 100vh;
+
+            color: var(--text);
+
+            overflow-x: hidden;
+
+            background:
+                radial-gradient(
+                    circle at 75% -10%,
+                    rgba(255, 0, 0, 0.16),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 0% 100%,
+                    rgba(140, 0, 0, 0.10),
+                    transparent 30%
+                ),
+                var(--bg);
+        }
+
+
+        body::before {
+            content: "";
+
+            position: fixed;
+
+            inset: 0;
+
+            pointer-events: none;
+
+            opacity: 0.025;
+
+            background-image:
+                linear-gradient(
+                    rgba(255, 255, 255, 0.7) 1px,
+                    transparent 1px
+                ),
+                linear-gradient(
+                    90deg,
+                    rgba(255, 255, 255, 0.7) 1px,
+                    transparent 1px
+                );
+
+            background-size: 50px 50px;
+        }
+
+
+        body::after {
+            content: "";
+
+            position: fixed;
+
+            width: 500px;
+            height: 500px;
+
+            top: -250px;
+            right: 10%;
+
+            background: rgba(255, 0, 0, 0.055);
+
+            filter: blur(100px);
+
+            border-radius: 50%;
+
+            pointer-events: none;
+
+            animation: ambientGlow 7s ease-in-out infinite alternate;
+        }
+
+
+        @keyframes ambientGlow {
+
+            from {
+                transform: translate(0, 0);
+                opacity: 0.5;
+            }
+
+            to {
+                transform: translate(-80px, 100px);
+                opacity: 1;
+            }
+
+        }
+
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+
+        /* =========================
+           MAIN LAYOUT
+        ========================== */
+
+        .layout {
+            min-height: 100vh;
+
+            display: flex;
+        }
+
+
+        /* =========================
+           SIDEBAR
+        ========================== */
+
+        .sidebar {
+
+            width: 255px;
+
+            min-height: 100vh;
+
+            display: flex;
+
+            flex-direction: column;
+
+            position: sticky;
+
+            top: 0;
+
+            padding: 28px 17px;
+
+            background: var(--sidebar);
+
+            border-right: 1px solid var(--border);
+
+            backdrop-filter: blur(20px);
+
+            -webkit-backdrop-filter: blur(20px);
+
+            z-index: 10;
+        }
+
+
+        .brand {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            padding: 0 8px;
+
+            margin-bottom: 46px;
+        }
+
+
+        .brand-icon {
+
+            width: 44px;
+
+            height: 44px;
+
+            display: grid;
+
+            place-items: center;
+
+            border-radius: 13px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #2b0e0e,
+                    #0d0505
+                );
+
+            border: 1px solid rgba(255, 48, 48, 0.35);
+
+            box-shadow:
+                0 0 25px rgba(255, 0, 0, 0.13);
+
+            font-size: 21px;
+
+            animation: shieldGlow 3s ease-in-out infinite;
+        }
+
+
+        @keyframes shieldGlow {
+
+            50% {
+
+                box-shadow:
+                    0 0 35px rgba(255, 0, 0, 0.24);
+
+            }
+
+        }
+
+
+        .brand h2 {
+
+            font-size: 21px;
+
+            letter-spacing: 0.4px;
+        }
+
+
+        .brand span {
+
+            display: block;
+
+            color: #66666d;
+
+            font-size: 12px;
+
+            margin-top: 4px;
+        }
+
+
+        .nav-title {
+
+            color: #505057;
+
+            font-size: 11px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 2px;
+
+            margin: 0 12px 12px;
+        }
+
+
+        .nav-item {
+
+            margin-bottom: 6px;
+
+            border-radius: 11px;
+        }
+
+
+        .nav-item a,
+
+        .nav-dashboard {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            padding: 13px;
+
+            color: #85858c;
+
+            border-radius: 11px;
+
+            font-size: 14px;
+
+            transition: 0.25s ease;
+        }
+
+
+        .nav-item:hover a,
+
+        .nav-item:hover .nav-dashboard {
+
+            color: #fff;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(255, 48, 48, 0.14),
+                    rgba(255, 48, 48, 0.025)
+                );
+
+            box-shadow:
+                inset 3px 0 0 var(--red),
+                0 0 22px rgba(255, 0, 0, 0.06);
+
+            transform: translateX(3px);
+        }
+
+
+        .nav-item.active .nav-dashboard {
+
+            color: #fff;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(255, 48, 48, 0.20),
+                    rgba(255, 48, 48, 0.035)
+                );
+
+            box-shadow:
+                inset 3px 0 0 var(--red),
+                0 0 25px rgba(255, 0, 0, 0.08);
+        }
+
+
+        .developer-section {
+
+            margin-top: auto;
+
+            padding-top: 20px;
+        }
+
+
+        .developer-section .nav-title {
+
+            margin-bottom: 10px;
+        }
+
+
+        /* =========================
+           MAIN CONTENT
+        ========================== */
+
+        .main {
+
+            flex: 1;
+
+            min-width: 0;
+
+            padding: 35px;
+
+            position: relative;
+
+            z-index: 1;
+        }
+
+
+        /* =========================
+           TOPBAR
+        ========================== */
+
+        .topbar {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 30px;
+        }
+
+
+        .topbar h1 {
+
+            font-size: 34px;
+
+            letter-spacing: -0.7px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #fff,
+                    #cfcfd3
+                );
+
+            -webkit-background-clip: text;
+
+            -webkit-text-fill-color: transparent;
+        }
+
+
+        .topbar p {
+
+            color: var(--muted);
+
+            font-size: 14px;
+
+            margin-top: 7px;
+        }
+
+
+        .status {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 9px;
+
+            padding: 10px 15px;
+
+            border-radius: 30px;
+
+            background: rgba(66, 229, 139, 0.045);
+
+            border: 1px solid rgba(66, 229, 139, 0.17);
+
+            color: #b8c5bd;
+
+            font-size: 13px;
+
+            box-shadow:
+                0 0 25px rgba(66, 229, 139, 0.035);
+        }
+
+
+        .status-dot {
+
+            width: 8px;
+
+            height: 8px;
+
+            border-radius: 50%;
+
+            background: var(--green);
+
+            box-shadow:
+                0 0 13px var(--green);
+
+            animation: statusPulse 2s infinite;
+        }
+
+
+        @keyframes statusPulse {
+
+            50% {
+
+                opacity: 0.45;
+
+                transform: scale(0.75);
+
+            }
+
+        }
+
+
+        /* =========================
+           STAT CARDS
+        ========================== */
+
+        .stats {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, minmax(0, 1fr));
+
+            gap: 16px;
+
+            margin-bottom: 20px;
+        }
+
+
+        .card {
+
+            position: relative;
+
+            overflow: hidden;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(22, 22, 25, 0.80),
+                    rgba(8, 8, 10, 0.82)
+                );
+
+            border: 1px solid var(--border);
+
+            border-radius: 17px;
+
+            padding: 21px;
+
+            backdrop-filter: blur(15px);
+
+            -webkit-backdrop-filter: blur(15px);
+
+            box-shadow:
+                0 18px 45px rgba(0, 0, 0, 0.24);
+
+            transition:
+                transform 0.3s ease,
+                border-color 0.3s ease,
+                box-shadow 0.3s ease;
+        }
+
+
+        .card::before {
+
+            content: "";
+
+            position: absolute;
+
+            top: 0;
+
+            left: 20px;
+
+            right: 20px;
+
+            height: 1px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(255, 48, 48, 0.5),
+                    transparent
+                );
+
+            opacity: 0.4;
+        }
+
+
+        .card::after {
+
+            content: "";
+
+            position: absolute;
+
+            width: 100px;
+
+            height: 100px;
+
+            right: -50px;
+
+            bottom: -50px;
+
+            border-radius: 50%;
+
+            background: rgba(255, 0, 0, 0.035);
+
+            filter: blur(20px);
+
+            pointer-events: none;
+        }
+
+
+        .card:hover {
+
+            transform: translateY(-4px);
+
+            border-color:
+                rgba(255, 48, 48, 0.32);
+
+            box-shadow:
+                0 22px 55px rgba(0, 0, 0, 0.36),
+                0 0 30px rgba(255, 0, 0, 0.065);
+        }
+
+
+        .clickable-card {
+
+            display: block;
+        }
+
+
+        .clickable-card .card {
+
+            height: 100%;
+        }
+
+
+        .card-label {
+
+            color: #85858d;
+
+            font-size: 14px;
+
+            margin-bottom: 13px;
+        }
+
+
+        .card-value {
+
+            font-size: 34px;
+
+            font-weight: 700;
+
+            letter-spacing: -0.7px;
+        }
+
+
+        .card-sub {
+
+            color: #626269;
+
+            font-size: 12px;
+
+            margin-top: 8px;
+        }
+
+
+        .good {
+
+            color: var(--green);
+        }
+
+
+        .warning {
+
+            color: var(--yellow);
+        }
+
+
+        .danger {
+
+            color: #ff5353;
+        }
+
+
+        /* =========================
+           LOWER CONTENT
+        ========================== */
+
+        .content-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                1.35fr 1fr;
+
+            gap: 20px;
+        }
+
+
+        .section-title {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 22px;
+        }
+
+
+        .section-title h3 {
+
+            font-size: 18px;
+        }
+
+
+        .section-title span {
+
+            color: #606067;
+
+            font-size: 12px;
+        }
+
+
+        /* =========================
+           SECURITY SCORE
+        ========================== */
+
+        .score {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 32px;
+        }
+
+
+        .score-circle {
+
+            width: 158px;
+
+            height: 158px;
+
+            flex-shrink: 0;
+
+            display: grid;
+
+            place-items: center;
+
+            border-radius: 50%;
+
+            background:
+
+                radial-gradient(
+                    circle at center,
+                    #101012 58%,
+                    transparent 59%
+                ),
+
+                conic-gradient(
+                    var(--red-bright)
+                    0 calc(var(--score, 82) * 1%),
+
+                    #242428
+                    calc(var(--score, 82) * 1%) 100%
+                );
+
+            box-shadow:
+                0 0 35px rgba(255, 0, 0, 0.10);
+
+            position: relative;
+        }
+
+
+        .score-circle::after {
+
+            content: "";
+
+            position: absolute;
+
+            inset: 7px;
+
+            border-radius: 50%;
+
+            border:
+                1px solid rgba(255, 48, 48, 0.12);
+
+            animation:
+                scoreRotate 8s linear infinite;
+        }
+
+
+        @keyframes scoreRotate {
+
+            to {
+
+                transform: rotate(360deg);
+
+            }
+
+        }
+
+
+        .score-number {
+
+            text-align: center;
+
+            z-index: 2;
+        }
+
+
+        .score-number strong {
+
+            display: block;
+
+            font-size: 44px;
+        }
+
+
+        .score-number span {
+
+            color: #66666d;
+
+            font-size: 10px;
+
+            letter-spacing: 1.5px;
+        }
+
+
+        /* =========================
+           SECURITY CHECKS
+        ========================== */
+
+        .checks {
+
+            flex: 1;
+        }
+
+
+        .check {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            padding: 13px 0;
+
+            border-bottom: 1px solid #202024;
+
+            font-size: 14px;
+
+            transition: 0.2s ease;
+        }
+
+
+        .check:hover {
+
+            padding-left: 5px;
+        }
+
+
+        .check:last-child {
+
+            border-bottom: none;
+        }
+
+
+        .check strong {
+
+            font-size: 13px;
+        }
+
+
+        /* =========================
+           RECENT ACTIVITY
+        ========================== */
+
+        .activity {
+
+            display: flex;
+
+            gap: 13px;
+
+            padding: 13px 0;
+
+            border-bottom: 1px solid #202024;
+
+            transition: 0.2s ease;
+        }
+
+
+        .activity:hover {
+
+            transform: translateX(4px);
+        }
+
+
+        .activity:last-child {
+
+            border-bottom: none;
+        }
+
+
+        .activity-icon {
+
+            width: 36px;
+
+            height: 36px;
+
+            flex-shrink: 0;
+
+            display: grid;
+
+            place-items: center;
+
+            border-radius: 10px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #19191c,
+                    #101012
+                );
+
+            border: 1px solid #28282c;
+        }
+
+
+        .activity-info {
+
+            min-width: 0;
+        }
+
+
+        .activity-info strong {
+
+            display: block;
+
+            font-size: 14px;
+
+            margin-bottom: 5px;
+
+            white-space: nowrap;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+        }
+
+
+        .activity-info span {
+
+            color: #64646b;
+
+            font-size: 12px;
+        }
+
+
+        /* =========================
+           RESPONSIVE
+        ========================== */
+
+        @media (max-width: 1100px) {
+
+            .stats {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .content-grid {
+
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+
+        @media (max-width: 700px) {
+
+            .sidebar {
+
+                width: 70px;
+
+                padding: 20px 10px;
+            }
+
+
+            .brand {
+
+                justify-content: center;
+            }
+
+
+            .brand > div:last-child,
+
+            .nav-title {
+
+                display: none;
+            }
+
+
+            .nav-item a,
+
+            .nav-dashboard {
+
+                justify-content: center;
+
+                font-size: 0;
+            }
+
+
+            .developer-section {
+
+                padding-top: 10px;
+            }
+
+
+            .main {
+
+                padding: 20px;
+            }
+
+
+            .topbar {
+
+                align-items: flex-start;
+
+                flex-direction: column;
+
+                gap: 15px;
+            }
+
+
+            .stats {
+
+                grid-template-columns: 1fr;
+            }
+
+
+            .score {
+
+                flex-direction: column;
+
+                align-items: flex-start;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="layout">
+
+
+    <!-- =========================
+         SIDEBAR
+    ========================== -->
+
+    <aside class="sidebar">
+
+
+        <!-- Brand -->
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                🛡️
+            </div>
+
+            <div>
+
+                <h2>
+                    CyberSentinel
+                </h2>
+
+                <span>
+                    Security Platform
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- Overview -->
+
+        <div class="nav-title">
+            Overview
+        </div>
+
+
+        <div class="nav-item active">
+
+            <div class="nav-dashboard">
+                📊 Dashboard
+            </div>
+
+        </div>
+
+
+        <div class="nav-item">
+
+            <a href="{{ url_for('alerts.alerts') }}">
+                🚨 Security Alerts
+            </a>
+
+        </div>
+
+
+        <div class="nav-item">
+
+            <a href="{{ url_for('password.password_security') }}">
+                🔐 Password Security
+            </a>
+
+        </div>
+
+
+        <div class="nav-item">
+
+            <a href="{{ url_for('url_analyzer.url_analyzer') }}">
+                🌐 URL Analyzer
+            </a>
+
+        </div>
+
+
+        <div class="nav-item">
+
+            <a href="{{ url_for('file_integrity.file_integrity') }}">
+                🛡️ File Integrity
+            </a>
+
+        </div>
+
+
+        <br>
+
+
+        <!-- System -->
+
+        <div class="nav-title">
+            System
+        </div>
+
+
+        <div class="nav-item">
+
+            <a href="{{ url_for('main.settings') }}">
+                ⚙️ Settings
+            </a>
+
+        </div>
+
+
+        <!-- Account -->
+
+        <div class="developer-section">
+
+            <div class="nav-title">
+                Account
+            </div>
+
+            <div class="nav-item">
+
+                <div class="nav-dashboard">
+                    👤 {{ username }}
+                </div>
+
+            </div>
+
+            <div class="nav-item">
+
+                <a href="{{ url_for('auth.logout') }}">
+                    🚪 Logout
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- Developer -->
+
+        <div class="developer-section">
+
+            <div class="nav-title">
+                Developer
+            </div>
+
+
+            <div class="nav-item">
+
+                <a
+                    href="https://github.com/shafaatansari"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    💻 GitHub
+                </a>
+
+            </div>
+
+        </div>
+
+
+    </aside>
+
+
+    <!-- =========================
+         MAIN CONTENT
+    ========================== -->
+
+    <main class="main">
+
+
+        <!-- Topbar -->
+
+        <div class="topbar">
+
+
+            <div>
+
+                <h1>
+                    Security Overview
+                </h1>
+
+                <p>
+                    Monitor your digital security from one place.
+                </p>
+
+            </div>
+
+
+            <div class="status">
+
+                <div class="status-dot"></div>
+
+                System Protected
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             STATISTICS
+        ========================== -->
+
+        <section class="stats">
+
+
+            <!-- Security Score -->
+
+            <a
+                href="{{ url_for('security_score.security_score') }}"
+                class="clickable-card"
+            >
+
+                <div class="card">
+
+                    <div class="card-label">
+                        Security Score
+                    </div>
+
+                    <div class="card-value">
+
+                        {{ security_score.score }}
+
+                    </div>
+
+                    <div class="card-sub">
+
+                        {{ security_score.status }}
+
+                    </div>
+
+                </div>
+
+            </a>
+
+
+            <!-- Alerts -->
+
+            <a
+                href="{{ url_for('alerts.alerts') }}"
+                class="clickable-card"
+            >
+
+                <div class="card">
+
+                    <div class="card-label">
+                        Active Alerts
+                    </div>
+
+                    <div class="card-value warning">
+
+                        {{ alert_count }}
+
+                    </div>
+
+                    <div class="card-sub">
+
+                        View security alerts →
+
+                    </div>
+
+                </div>
+
+            </a>
+
+
+            <!-- Events -->
+
+            <a
+                href="{{ url_for('events.events') }}"
+                class="clickable-card"
+            >
+
+                <div class="card">
+
+                    <div class="card-label">
+                        Security Events
+                    </div>
+
+                    <div class="card-value">
+
+                        {{ event_count }}
+
+                    </div>
+
+                    <div class="card-sub">
+
+                        View all security events →
+
+                    </div>
+
+                </div>
+
+            </a>
+
+
+            <!-- Threat Analyzer -->
+
+            <a
+                href="{{ url_for('url_analyzer.url_analyzer') }}"
+                class="clickable-card"
+            >
+
+                <div class="card">
+
+                    <div class="card-label">
+                        Threat Analyzer
+                    </div>
+
+                    <div class="card-value danger">
+                        URL
+                    </div>
+
+                    <div class="card-sub">
+
+                        Analyze suspicious URLs →
+
+                    </div>
+
+                </div>
+
+            </a>
+
+
+        </section>
+
+
+        <!-- =========================
+             LOWER CONTENT
+        ========================== -->
+
+        <section class="content-grid">
+
+
+            <!-- Security Health -->
+
+            <div class="card">
+
+
+                <div class="section-title">
+
+                    <h3>
+                        Security Health
+                    </h3>
+
+                    <span>
+                        Updated just now
+                    </span>
+
+                </div>
+
+
+                <div class="score">
+
+
+                    <!-- Score Circle -->
+
+                    <div
+                        class="score-circle"
+                        style="--score: {{ security_score.score }};"
+                    >
+
+                        <div class="score-number">
+
+                            <strong>
+                                {{ security_score.score }}
+                            </strong>
+
+                            <span>
+                                SECURITY SCORE
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Checks -->
+
+                    <div class="checks">
+
+
+                        <a
+                            href="{{ url_for('password.password_security') }}"
+                        >
+
+                            <div class="check">
+
+                                <span>
+                                    Password Security
+                                </span>
+
+                                <strong class="good">
+                                    Analyze →
+                                </strong>
+
+                            </div>
+
+                        </a>
+
+
+                        <a
+                            href="{{ url_for('file_integrity.file_integrity') }}"
+                        >
+
+                            <div class="check">
+
+                                <span>
+                                    File Integrity
+                                </span>
+
+                                <strong class="good">
+                                    Protected →
+                                </strong>
+
+                            </div>
+
+                        </a>
+
+
+                        <a
+                            href="{{ url_for('events.events') }}"
+                        >
+
+                            <div class="check">
+
+                                <span>
+                                    Login Activity
+                                </span>
+
+                                <strong class="warning">
+                                    Review →
+                                </strong>
+
+                            </div>
+
+                        </a>
+
+
+                        <a
+                            href="{{ url_for('url_analyzer.url_analyzer') }}"
+                        >
+
+                            <div class="check">
+
+                                <span>
+                                    Threat Detection
+                                </span>
+
+                                <strong class="good">
+                                    Active →
+                                </strong>
+
+                            </div>
+
+                        </a>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Recent Activity -->
+
+            <div class="card">
+
+
+                <div class="section-title">
+
+                    <h3>
+                        Recent Activity
+                    </h3>
+
+                    <span>
+
+                        {{ events|length }} events
+
+                    </span>
+
+                </div>
+
+
+                {% if events %}
+
+
+                    {% for event in events[:5] %}
+
+
+                        <div class="activity">
+
+
+                            <div class="activity-icon">
+
+
+                                {% if event["event_type"] == "LOGIN_SUCCESS" %}
+
+                                    🔐
+
+                                {% elif event["event_type"] == "LOGIN_FAILED" %}
+
+                                    ⚠️
+
+                                {% else %}
+
+                                    🛡️
+
+                                {% endif %}
+
+
+                            </div>
+
+
+                            <div class="activity-info">
+
+
+                                <strong>
+
+                                    {{ event["description"] }}
+
+                                </strong>
+
+
+                                <span>
+
+                                    {{ event["event_type"] }}
+
+                                    ·
+
+                                    {{ event["created_at"] }}
+
+                                </span>
+
+
+                            </div>
+
+
+                        </div>
+
+
+                    {% endfor %}
+
+
+                {% else %}
+
+
+                    <div class="activity">
+
+
+                        <div class="activity-icon">
+                            🛡️
+                        </div>
+
+
+                        <div class="activity-info">
+
+
+                            <strong>
+                                No security events
+                            </strong>
+
+
+                            <span>
+                                Your activity will appear here.
+                            </span>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                {% endif %}
+
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+
+</div>
+
+
+</body>
+
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>File Integrity | CyberSentinel</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top right, rgba(220, 0, 0, 0.18), transparent 35%),
+                #050505;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            padding: 40px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 35px;
+        }
+
+        .brand {
+            color: #ff3030;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .back {
+            color: white;
+            text-decoration: none;
+            padding: 10px 16px;
+            border: 1px solid #333;
+            border-radius: 8px;
+        }
+
+        .back:hover {
+            border-color: #ff3030;
+        }
+
+        .card {
+            background: rgba(18, 18, 18, 0.92);
+            border: 1px solid #292929;
+            border-radius: 16px;
+            padding: 35px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #999;
+            margin-bottom: 30px;
+        }
+
+        .upload-box {
+            border: 1px dashed #444;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: bold;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            background: #090909;
+            color: #bbb;
+            border: 1px solid #333;
+            border-radius: 8px;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 9px;
+            background: linear-gradient(135deg, #ff3030, #b00000);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 22px;
+            border-radius: 12px;
+            background: #0b0b0b;
+            border: 1px solid #292929;
+        }
+
+        .status {
+            font-size: 26px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .safe {
+            color: #35d07f;
+        }
+
+        .changed {
+            color: #ff4d4d;
+        }
+
+        .baseline {
+            color: #f5b942;
+        }
+
+        .error {
+            color: #ff4d4d;
+        }
+
+        .message {
+            color: #bbb;
+            margin: 10px 0 18px;
+        }
+
+        .hash {
+            padding: 14px;
+            background: #050505;
+            border: 1px solid #222;
+            border-radius: 8px;
+            color: #888;
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 13px;
+        }
+
+        .info {
+            margin-top: 20px;
+            color: #777;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="top">
+        <div class="brand">🛡️ CyberSentinel</div>
+
+        <a href="{{ url_for('main.dashboard') }}" class="back">
+            ← Dashboard
+        </a>
+    </div>
+
+    <div class="card">
+
+        <h1>File Integrity Monitor</h1>
+
+        <p class="subtitle">
+            Create a SHA-256 baseline and detect changes to a file.
+        </p>
+
+        <form method="POST" enctype="multipart/form-data">
+
+            <div class="upload-box">
+
+                <label for="file">
+                    Select a file
+                </label>
+
+                <input
+                    type="file"
+                    id="file"
+                    name="file"
+                    required
+                >
+
+            </div>
+
+            <button type="submit">
+                Check File Integrity
+            </button>
+
+        </form>
+
+        {% if result %}
+
+        <div class="result">
+
+            <div>Integrity Status</div>
+
+            <div class="status
+                {% if result.status == 'SAFE' %}
+                    safe
+                {% elif result.status == 'CHANGED' %}
+                    changed
+                {% elif result.status == 'BASELINE' %}
+                    baseline
+                {% else %}
+                    error
+                {% endif %}
+            ">
+                {{ result.status }}
+            </div>
+
+            <div class="message">
+                {{ result.message }}
+            </div>
+
+            {% if result.hash %}
+
+            <div class="hash">
+                SHA-256: {{ result.hash }}
+            </div>
+
+            {% endif %}
+
+        </div>
+
+        {% endif %}
+
+        <div class="info">
+            The selected file is analyzed locally by calculating its SHA-256
+            hash. The file itself is not modified.
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
