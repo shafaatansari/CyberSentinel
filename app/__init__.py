@@ -4,7 +4,15 @@ from flask import Flask
 def create_app():
     app = Flask(__name__)
 
-    app.config["SECRET_KEY"] = "cybersentinel-development-secret"
+    import os
+    from dotenv import load_dotenv
+
+    load_dotenv()
+
+    app.config["SECRET_KEY"] = os.getenv(
+    "SECRET_KEY",
+    "cybersentinel-development-secret"
+    )
 
     from app.routes.main import main_bp
     app.register_blueprint(main_bp)
